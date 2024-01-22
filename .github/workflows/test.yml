@@ -15,3 +15,13 @@ jobs:
           $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install emulator --channel=0 > /dev/null
           $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install 'system-images;android-29;default;x86_64' --channel=0 > /dev/null
           echo no | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager create avd --force -n test --abi 'default/x86_64' --package 'system-images;android-29;default;x86_64' --device 'Nexus 6'
+      - name: "Start emulator"
+        run: |
+          $ANDROID_SDK_ROOT/emulator/emulator -avd test -no-audio -no-window -no-snapshot &
+          $ANDROID_SDK_ROOT/platform-tools/adb wait-for-device
+          $ANDROID_SDK_ROOT/platform-tools/adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'
+      - name: "Download and Install APK"
+        run: |
+          curl -L -o app.apk "https://drive.google.com/uc?export=download&id=1waLbDD8uXSErfs_ugAV4OQ2CP31XssEi"
+          $ANDROID_SDK_ROOT/platform-tools/adb install app.apk
+        
