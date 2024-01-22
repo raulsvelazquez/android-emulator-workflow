@@ -1,24 +1,17 @@
-name: Android CI
-
-on: [push]
+name: Emulator Test
+on:
+  push:
+  workflow_dispatch:
 
 jobs:
-  test:
+  integration_test:
     runs-on: ubuntu-latest
-
+    name: "Android"
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
-
-    - name: Enable KVM
-      run: |
-        echo 'KERNEL=="kvm", GROUP="kvm", MODE="0666", OPTIONS+="static_node=kvm"' | sudo tee /etc/udev/rules.d/99-kvm4all.rules
-        sudo udevadm control --reload-rules
-        sudo udevadm trigger --name-match=kvm
-
-    - name: Run tests
-      uses: reactivecircus/android-emulator-runner@v2
-      with:
-        api-level: 29
-        profile: Nexus 6
-        script: ./gradlew connectedCheck
+      - uses: actions/checkout@v2
+      - name: "Check android emulator"
+        run: |
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install 'build-tools;31.0.0' platform-tools 'platforms;android-29' > /dev/null
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install emulator --channel=0 > /dev/null
+          $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/sdkmanager --install 'system-images;android-29;default;x86_64' --channel=0 > /dev/null
+          echo no | $ANDROID_SDK_ROOT/cmdline-tools/latest/bin/avdmanager create avd --force -n test --abi 'default/x86_64' --package 'system-images;android-29;default;x86_64' --device 'Nexus 6'
