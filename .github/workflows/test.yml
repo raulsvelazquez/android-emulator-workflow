@@ -58,7 +58,4 @@ jobs:
           else
             echo "Error: APK file did not download correctly or is empty."
             exit 1
-          fi
-
-
-        
+          fi       
