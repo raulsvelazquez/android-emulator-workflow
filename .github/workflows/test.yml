@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     name: "Android Integration Test"
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: "Enable KVM for Emulator Acceleration"
         run: |
