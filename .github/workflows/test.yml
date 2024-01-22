@@ -50,8 +50,15 @@ jobs:
           fi
         shell: bash
   
-      - name: Install APK on Emulator
-        run: adb install app.apk
-        shell: bash
+      - name: "Install APK"
+        run: |
+          if [ -s "app.apk" ]; then
+            echo "APK file downloaded successfully and is not empty."
+            $ANDROID_SDK_ROOT/platform-tools/adb install app.apk
+          else
+            echo "Error: APK file did not download correctly or is empty."
+            exit 1
+          fi
+
 
         
