@@ -37,7 +37,7 @@ jobs:
 
       - name: Download APK from Google Drive
         run: |
-          curl -L -o app.apk "https://drive.google.com/uc?export=download&id=1waLbDD8uXSErfs_ugAV4OQ2CP31XssEi"
+          curl -L -o app.apk "https://github.com/raulsvelazquez/android-emulator-workflow/releases/download/prueba/app.apk"
         shell: bash
   
       - name: Verify APK File Size
