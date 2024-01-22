@@ -29,9 +29,29 @@ jobs:
           $ANDROID_SDK_ROOT/platform-tools/adb wait-for-device
           $ANDROID_SDK_ROOT/platform-tools/adb shell 'while [[ -z $(getprop sys.boot_completed) ]]; do sleep 1; done; input keyevent 82'
 
-      - name: "Download and Install APK"
+      - name: "Verify Emulator Installation and Startup"
+        run: |
+          $ANDROID_SDK_ROOT/platform-tools/adb devices
+          $ANDROID_SDK_ROOT/platform-tools/adb wait-for-device
+          $ANDROID_SDK_ROOT/platform-tools/adb shell getprop sys.boot_completed
+
+      - name: Download APK from Google Drive
         run: |
           curl -L -o app.apk "https://drive.google.com/uc?export=download&id=1waLbDD8uXSErfs_ugAV4OQ2CP31XssEi"
-          $ANDROID_SDK_ROOT/platform-tools/adb install app.apk
+        shell: bash
+  
+      - name: Verify APK File Size
+        run: |
+          if [ -s "app.apk" ]; then
+            echo "APK file downloaded successfully and is not empty."
+          else
+            echo "Error: APK file did not download correctly or is empty."
+            exit 1
+          fi
+        shell: bash
+  
+      - name: Install APK on Emulator
+        run: adb install app.apk
+        shell: bash
 
         
